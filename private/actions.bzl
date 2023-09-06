@@ -150,6 +150,7 @@ def nix_build(
         mnemonic = "NixBuild",
         execution_requirements = {
             "no-cache": "1",
+            "no-sandbox": "1",
         },
         # .bazelrc needs:
         # build --sandbox_writable_path=/nix

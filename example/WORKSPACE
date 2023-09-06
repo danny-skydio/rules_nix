@@ -16,3 +16,26 @@ python_register_toolchains(
     name = "python_3_11",
     python_version = "3.11",
 )
+
+load("@rules_nix//private:workspace.bzl", "nixpkgs_git_repository")
+
+nixpkgs_git_repository(
+    name = "nixpkgs",
+    revision = "ce6aa13369b667ac2542593170993504932eb836",
+)
+
+# http_archive(
+#     name = "apriltags",
+#     build_file = "@//apriltags:apriltags.BUILD.bazel",
+#     sha256 = "111a93a5315f8b8c2a36fa911403236032a819e8f50e8845548fe2d7dd1e5db5",
+#     strip_prefix = "apriltag-3.2.0",
+#     urls = ["https://github.com/AprilRobotics/apriltag/archive/refs/tags/v3.2.0.tar.gz"],
+# )
+
+load("@rules_nix//toolchains:nix.bzl", "auto_nix_toolchain")
+
+auto_nix_toolchain(
+    name = "default_nix_toolchain",
+)
+
+register_toolchains("@default_nix_toolchain//:toolchain")

@@ -1,13 +1,5 @@
-load("//private:worker.bzl", "nix_build")
-
 # nix toolchain
 toolchain_type(
     name = "toolchain_type",
     visibility = ["//visibility:public"],
-)
-
-nix_build(
-    name = "test_nix_build",
-    srcs = ["test_nix_build.cc"],
-    derivation = "//:test_nix_build.nix",
 )

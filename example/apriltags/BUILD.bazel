@@ -1,0 +1,32 @@
+load("@rules_nix//:defs.bzl", "nix_cc")
+
+exports_files(
+    ["default.nix"],
+    visibility = ["//visibility:public"],
+)
+
+nix_cc(
+    name = "apriltags",
+    srcs = [],
+    derivation = ":default.nix",
+    nixpkgs = [
+        "stdenv",
+        "cmake",
+        "pkg-config",
+        "opencv4",
+        "eigen",
+        "fetchFromGitHub",
+    ],
+    out_shared_libs = [
+        "libapriltags.so",
+    ],
+    target_compatible_with = [
+        "@platforms//os:linux",
+        "@platforms//cpu:x86_64",
+    ],
+    visibility = ["//visibility:public"],
+    # deps = [
+    #     "//third_party:opencv",
+    #     "//third_party/eigen",
+    # ],
+)

@@ -1,7 +1,7 @@
-load("@rules_nix//private:worker.bzl", "nix_worker")
+# load("@rules_nix//private:worker.bzl", "nix_worker")
 
-nix_worker(
-    name = "test_nix_build",
-    srcs = ["test_nix_build.cc"],
-    derivation = "//:test_nix_build.nix",
-)
+# nix_worker(
+#     name = "test_nix_build",
+#     srcs = ["test_nix_build.cc"],
+#     derivation = "//:test_nix_build.nix",
+# )
