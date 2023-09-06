@@ -1,0 +1,16 @@
+load("//private:worker.bzl", "concat")
+
+# nix toolchain
+toolchain_type(
+    name = "toolchain_type",
+    visibility = ["//visibility:public"],
+)
+
+concat(
+    name = "test_concat",
+    out = "concat.bzl",
+    chunks = [
+        "BUILD.bazel",
+        "defs.bzl",
+    ],
+)
