@@ -1,6 +1,9 @@
-workspace(name = "rules_nix")
+local_repository(
+    name = "rules_nix",
+    path = "../",
+)
 
-load("@//:deps.bzl", "rules_nix_deps")
+load("@rules_nix//:deps.bzl", "rules_nix_deps")
 
 # We need rules_python and com_google_protobuf, if you have other versions it should be okay.
 # If you want other versions, load them before calling rules_nix_deps!

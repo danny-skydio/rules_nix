@@ -1,4 +1,10 @@
-load("@rules_python//python:defs.bzl", "py_binary")
+load("@rules_python//python:defs.bzl", "py_binary", "py_library")
+
+py_library(
+    name = "nix_actions",
+    srcs = ["nix_actions.py"],
+    imports = ["."],
+)
 
 py_binary(
     name = "persistent_worker",
@@ -6,4 +12,5 @@ py_binary(
     main = "worker.py",
     python_version = "PY3",
     visibility = ["//visibility:public"],
+    deps = [":nix_actions"],
 )

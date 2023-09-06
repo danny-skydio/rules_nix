@@ -1,5 +1,16 @@
 def _impl(ctx):
-    args = [ctx.outputs.out.path] + [f.path for f in ctx.files.chunks]
+    # args = ctx.actions.args()
+    # args.add("--dir", intermediate_dir.path)
+    # args.add_all("--derivation", [ctx.files.derivation])
+    # args.add_all(ctx.files.srcs)
+    output_file = ctx.actions.declare_file(ctx.label.name + ".output")
+
+    args = [
+        "build",
+        ctx.file.derivation.path,
+        "--output",
+        output_file.path,
+    ] + [f.path for f in ctx.files.srcs]
 
     args_file = ctx.actions.declare_file(ctx.label.name + ".args")
     ctx.actions.write(
@@ -8,23 +19,27 @@ def _impl(ctx):
     )
 
     ctx.actions.run(
-        mnemonic = "Concat",
-        inputs = ctx.files.chunks + [args_file],
-        outputs = [ctx.outputs.out],
+        mnemonic = "NixWorker",
+        inputs = ctx.files.srcs + [args_file],
+        outputs = [output_file],
         arguments = ["@" + args_file.path],
-        executable = ctx.executable.merge_tool,
+        executable = ctx.executable.worker,
         execution_requirements = {
             "supports-workers": "1",
             "requires-worker-protocol": "json",
         },
     )
 
-concat = rule(
+    return DefaultInfo(
+        files = depset([output_file]),
+    )
+
+nix_worker = rule(
     implementation = _impl,
     attrs = {
-        "chunks": attr.label_list(allow_files = True),
-        "out": attr.output(mandatory = True),
-        "merge_tool": attr.label(
+        "srcs": attr.label_list(allow_files = True),
+        "derivation": attr.label(allow_single_file = True, mandatory = True),
+        "worker": attr.label(
             executable = True,
             cfg = "exec",
             allow_files = True,

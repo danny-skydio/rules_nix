@@ -5,17 +5,17 @@ import sys
 import traceback
 
 
-def concat(input_paths, out_path):
-    with open(out_path, "wb") as out_f:
-        for input_path in input_paths:
-            with open(input_path, "rb") as input_f:
-                out_f.write(input_f.read())
+from nix_actions import route_nix_request
 
 
 if __name__ == "__main__":
+    if "--persistent_worker" not in sys.argv:
+        route_nix_request(sys.argv[1:])
     # parse work requests from stdin
     for work_request_str in sys.stdin:
         work_request = json.loads(work_request_str)
+
+        # Default response if failed
         response = {
             "exitCode": 1,
             "output": "",
@@ -24,14 +24,11 @@ if __name__ == "__main__":
         try:
             out_path = work_request["arguments"][0]
             input_paths = work_request["arguments"][1:]
-            concat(input_paths, out_path)
-
-            response["exitCode"] = 0
+            response = route_nix_request(work_request)
 
         except Exception:  # pylint: disable=broad-except
             output = StringIO()
             traceback.print_exc(file=output)
-            response["exitCode"] = 1
             response["output"] = output.getvalue()
 
         os.write(1, json.dumps(response).encode("utf-8"))

@@ -1,4 +1,4 @@
-load("//private:worker.bzl", "concat")
+load("//private:worker.bzl", "nix_build")
 
 # nix toolchain
 toolchain_type(
@@ -6,11 +6,8 @@ toolchain_type(
     visibility = ["//visibility:public"],
 )
 
-concat(
-    name = "test_concat",
-    out = "concat.bzl",
-    chunks = [
-        "BUILD.bazel",
-        "defs.bzl",
-    ],
+nix_build(
+    name = "test_nix_build",
+    srcs = ["test_nix_build.cc"],
+    derivation = "//:test_nix_build.nix",
 )

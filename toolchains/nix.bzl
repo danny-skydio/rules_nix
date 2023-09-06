@@ -34,8 +34,8 @@ def _auto_nix_toolchain(repository_ctx):
     repository_ctx.file(
         "BUILD.bazel",
         content = """
-load("@io_tweag_rules_nixpkgs//nixpkgs:toolchains/nix.bzl", "nix_toolchain")
-load("@io_tweag_rules_nixpkgs//:defs.bzl", "nix_package_repository")
+load("@rules_nix//nixpkgs:toolchains/nix.bzl", "nix_toolchain")
+load("@rules_nix//:defs.bzl", "nix_package_repository")
 nix_toolchain(
     name = "nix_toolchain",
     nix_build_bin_path = "{nix_build_bin_path}",
@@ -45,7 +45,7 @@ nix_toolchain(
 toolchain(
     name = "toolchain",
     toolchain = ":nix_toolchain",
-    toolchain_type = "@io_tweag_rules_nixpkgs//:toolchain_type",
+    toolchain_type = "@rules_nix//:toolchain_type",
 )
 """.format(
             nix_build_bin_path = repository_ctx.which("nix-build"),
