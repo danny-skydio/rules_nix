@@ -44,6 +44,10 @@ def _nix_debug_build(ctx, out_tree):
             out_tree.path,
             ctx.outputs.path_info.path,
         ),
+        execution_requirements = {
+            "no-cache": "1",  # ?
+            "no-sandbox": "1",
+        },
     )
 
     # <name>.log generates a file with the nix build log for this target
@@ -55,6 +59,10 @@ def _nix_debug_build(ctx, out_tree):
             out_tree.path,
             ctx.outputs.log.path,
         ),
+        execution_requirements = {
+            "no-cache": "1",  # ?
+            "no-sandbox": "1",
+        },
     )
 
     # <name>.derivation shows the derivation for this target
@@ -66,6 +74,10 @@ def _nix_debug_build(ctx, out_tree):
             out_tree.path,
             ctx.outputs.derivation.path,
         ),
+        execution_requirements = {
+            "no-cache": "1",  # ?
+            "no-sandbox": "1",
+        },
     )
 
     ctx.actions.run_shell(
@@ -75,6 +87,10 @@ def _nix_debug_build(ctx, out_tree):
             out_tree.path,
             ctx.outputs.lib_list.path,
         ),
+        execution_requirements = {
+            "no-cache": "1",  # ?
+            "no-sandbox": "1",
+        },
     )
 
 def _nix_docker_helper(ctx, out_tree):
@@ -93,6 +109,10 @@ def _nix_docker_helper(ctx, out_tree):
             ">",
             ctx.outputs.tar.path,
         ]),
+        execution_requirements = {
+            "no-cache": "1",  # ?
+            "no-sandbox": "1",
+        },
     )
 
 def nix_build(
@@ -149,7 +169,7 @@ def nix_build(
         ],
         mnemonic = "NixBuild",
         execution_requirements = {
-            "no-cache": "1",
+            "no-cache": "1",  # ?
             "no-sandbox": "1",
         },
         # .bazelrc needs:
@@ -245,6 +265,10 @@ def nix_layer(ctx, deps, store_paths, output_manifest):
             manifest_path = output_manifest.path,
         ),
         arguments = store_paths,
+        execution_requirements = {
+            "no-cache": "1",  # ?
+            "no-sandbox": "1",
+        },
     )
 
     ctx.actions.run_shell(
@@ -254,8 +278,13 @@ def nix_layer(ctx, deps, store_paths, output_manifest):
         # It would be better to replace this with an invocation of rules_docker's tar building
         # code in python. If we rely at all on python, I'd love to replace the sketchy bash
         # script above too.
+        # TODO(danny): probably use a hermetic tar implementation by using python to pack this.
         command = "cat {manifest_path} | xargs tar c > {tar_output_path}".format(
             manifest_path = output_manifest.path,
             tar_output_path = ctx.outputs.tar.path,
         ),
+        execution_requirements = {
+            "no-cache": "1",  # ?
+            "no-sandbox": "1",
+        },
     )

@@ -1,4 +1,5 @@
 load("@rules_nix//:defs.bzl", "nix_cc")
+load("@rules_nix//private:rules.bzl", "nix_deps_layer")
 
 exports_files(
     ["default.nix"],
@@ -29,4 +30,10 @@ nix_cc(
     #     "//third_party:opencv",
     #     "//third_party/eigen",
     # ],
+)
+
+nix_deps_layer(
+    name = "apriltags_deps",
+    visibility = ["//visibility:public"],
+    deps = [":apriltags"],
 )
